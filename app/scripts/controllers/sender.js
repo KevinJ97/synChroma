@@ -42,8 +42,9 @@ angular.module('synChromaApp')
     		}
     	}
     	vm.totalBaseThree = ["5", "4", "5"].concat(vm.totalBaseThree);
+        vm.totalBaseThree = vm.totalBaseThree.concat(["5", "4", "5"]);
     	// console.log(vm.totalBaseThree);
-    	vm.interval = $interval( function(){ callAtInterval(); }, 150);
+    	vm.interval = $interval( function(){ callAtInterval(); }, 1000);
     }
 
     vm.stop = function() {
@@ -83,7 +84,7 @@ angular.module('synChromaApp')
     	} else if (vm.temp == "1") {
     		vm.data = {
     			'r': 0,
-	    		'g': 255,
+	    		'g': 200,
 	    		'b': 0
     		}
     	} else if (vm.temp == "2") {
