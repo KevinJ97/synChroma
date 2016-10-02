@@ -44,7 +44,7 @@ angular.module('synChromaApp')
     	vm.totalBaseThree = ["5", "4", "5"].concat(vm.totalBaseThree);
         vm.totalBaseThree = vm.totalBaseThree.concat(["5", "4", "5"]);
     	// console.log(vm.totalBaseThree);
-    	vm.interval = $interval( function(){ callAtInterval(); }, 1000);
+    	vm.interval = $interval( function(){ callAtInterval(); }, 200);
     }
 
     vm.stop = function() {
