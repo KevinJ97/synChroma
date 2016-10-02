@@ -21,30 +21,46 @@ angular.module('synChromaApp')
     	'b': 0
     }
     vm.userInputString = "";
-    
+    vm.black = "\0\0\0";
+    var res = String.fromCharCode(255);
+    vm.white = res + res + res;
+    // vm.black = "\2\2\2";
     vm.generateColors = function() {
     	vm.redCounter=0;
 	    vm.greenCounter=1;
 	    vm.blueCounter=2;
-	 	console.log("\0".charCodeAt(0));
+	    vm.loopString = vm.white + vm.black + vm.white + vm.userInputString;
     	vm.interval = $interval( function(){ callAtInterval(); }, 50);
     }
 
+    vm.stop = function() {
+    	vm.redCounter=0;
+	    vm.greenCounter=1;
+	    vm.blueCounter=2;
+	    vm.data = {
+	    	'r': 0,
+	    	'g': 0,
+	    	'b': 0
+	    }
+		$interval.cancel(vm.interval);
+    }
     function callAtInterval() {
-		vm.data.r = vm.userInputString.charCodeAt(vm.redCounter);
+		vm.data.r = vm.loopString.charCodeAt(vm.redCounter);
 		console.log("RED: " + vm.data.r);
-		vm.data.g = vm.userInputString.charCodeAt(vm.greenCounter);
+		vm.data.g = vm.loopString.charCodeAt(vm.greenCounter);
 		console.log("GREEN: " + vm.data.g);
-		vm.data.b = vm.userInputString.charCodeAt(vm.blueCounter);
+		vm.data.b = vm.loopString.charCodeAt(vm.blueCounter);
 		console.log("BLUE:" + vm.data.b)
 
-		if (vm.blueCounter < vm.userInputString.length-2) {
-			vm.redCounter += 3;
+		if (vm.blueCounter < vm.loopString.length-2) {
+			vm.redCounter += 3 ;
 			vm.greenCounter += 3;
 			vm.blueCounter += 3;
 		} else {
 			vm.data.b = 0;
-			$interval.cancel(vm.interval);
+			vm.redCounter=0;
+		    vm.greenCounter=1;
+		    vm.blueCounter=2;
 		}
 	    console.log("Interval occurred");
 	}
