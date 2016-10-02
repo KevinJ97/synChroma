@@ -24,19 +24,30 @@ angular.module('synChromaApp')
     vm.black = "\0\0\0";
     var res = String.fromCharCode(255);
     vm.white = res + res + res;
+    vm.countColors = 0;
     // vm.black = "\2\2\2";
     vm.generateColors = function() {
-    	vm.redCounter=0;
-	    vm.greenCounter=1;
-	    vm.blueCounter=2;
-	    vm.loopString = vm.white + vm.black + vm.white + vm.userInputString;
-    	vm.interval = $interval( function(){ callAtInterval(); }, 50);
+    	vm.totalBaseThree = [];
+    	vm.i = 0;
+    	while(vm.i<vm.userInputString.length) {
+	    	// vm.totalBaseThree.push(vm.convertCharToBaseThree(vm.userInputString[0]));
+	    	vm.totalBaseThree.push(vm.convertCharToBaseThree(vm.userInputString[vm.i]));
+	    	vm.i = vm.i+1;
+    	}
+    	vm.totalBaseThree = vm.totalBaseThree.join(",5,");
+    	vm.totalBaseThree = vm.totalBaseThree.split(",");
+    	for(vm.i=0; vm.i<vm.totalBaseThree.length-1; vm.i++) {
+    		if (vm.totalBaseThree[vm.i+1] == vm.totalBaseThree[vm.i] ) {
+    			vm.totalBaseThree[vm.i+1] = "4";
+    		}
+    	}
+    	vm.totalBaseThree = ["5", "4", "5"].concat(vm.totalBaseThree);
+    	// console.log(vm.totalBaseThree);
+    	vm.interval = $interval( function(){ callAtInterval(); }, 150);
     }
 
     vm.stop = function() {
-    	vm.redCounter=0;
-	    vm.greenCounter=1;
-	    vm.blueCounter=2;
+    	vm.countColors = 0;
 	    vm.data = {
 	    	'r': 0,
 	    	'g': 0,
@@ -44,24 +55,56 @@ angular.module('synChromaApp')
 	    }
 		$interval.cancel(vm.interval);
     }
-    function callAtInterval() {
-		vm.data.r = vm.loopString.charCodeAt(vm.redCounter);
-		console.log("RED: " + vm.data.r);
-		vm.data.g = vm.loopString.charCodeAt(vm.greenCounter);
-		console.log("GREEN: " + vm.data.g);
-		vm.data.b = vm.loopString.charCodeAt(vm.blueCounter);
-		console.log("BLUE:" + vm.data.b)
 
-		if (vm.blueCounter < vm.loopString.length-2) {
-			vm.redCounter += 3 ;
-			vm.greenCounter += 3;
-			vm.blueCounter += 3;
-		} else {
-			vm.data.b = 0;
-			vm.redCounter=0;
-		    vm.greenCounter=1;
-		    vm.blueCounter=2;
-		}
+    vm.convertCharToBaseThree = function(myChar) {
+    	vm.n = myChar.charCodeAt(0);
+    	vm.lastChar = '';
+    	vm.baseThree = [];
+    	while(vm.n > 0){
+    		vm.baseThree.push(vm.n % 3);
+    		vm.n = Math.floor(vm.n / 3);
+    	}
+    	vm.baseThree.reverse();
+    	return vm.baseThree;
+    	// console.log(vm.baseThree);
+    }
+
+
+    function callAtInterval() {
+    	vm.temp = vm.totalBaseThree[vm.countColors];
+    	console.log(vm.temp);
+    	vm.countColors = (vm.countColors + 1) % vm.totalBaseThree.length;
+    	if (vm.temp == "0") {
+    		vm.data = {
+    			'r': 255,
+	    		'g': 0,
+	    		'b': 0
+    		}
+    	} else if (vm.temp == "1") {
+    		vm.data = {
+    			'r': 0,
+	    		'g': 255,
+	    		'b': 0
+    		}
+    	} else if (vm.temp == "2") {
+    		vm.data = {
+    			'r': 0,
+	    		'g': 0,
+	    		'b': 255
+    		}
+    	} else if (vm.temp == "4") {
+    		vm.data = {
+    			'r': 255,
+	    		'g': 255,
+	    		'b': 255
+    		}
+    	} else if (vm.temp == "5") {
+    		vm.data = {
+    			'r': 0,
+	    		'g': 0,
+	    		'b': 0
+    		}
+    	}
 	    console.log("Interval occurred");
 	}
 
